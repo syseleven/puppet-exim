@@ -1,0 +1,45 @@
+#!/bin/bash
+
+# counts mails. Default: completed mails the last minute.
+# 2013/05/02 jpeschke@syseleven.de
+
+LANG=C
+
+logFile="/var/log/exim/exim_main.log"
+state="Completed"
+
+while [[ $1 ]]; do
+        case "$1" in
+                --state)
+                state=$2
+                shift 2
+                ;;
+                --logfile)
+                logFile=$2
+                shift 2
+                ;;
+                -h)
+                echo "$(basename $0) [--state Completed|Deferred] [--logfile /path/to/exim_mainlog]";
+                shift
+                exit;
+                ;;
+        esac
+done
+
+logRange="$(date --date="-1 minutes" "+%Y-%m-%d %H:%M")"
+
+countMails (){
+        case "$state" in
+                Completed)
+                fgrep "$logRange" $logFile |grep -c $state
+                ;;
+                Deferred)
+                fgrep "$logRange" $logFile |grep -c "retry time not reached"
+                ;;
+                *)
+                echo "Unknown state";
+                ;;
+        esac
+}
+
+countMails
