@@ -1,3 +1,5 @@
+v1.3.2 (b239c2b) 
+  - monit: change to use service param #pp-1992 
 1.3.1 (4df60d24e) 
   -  fix deprecated variable access #pp-2057
 1.3.0 (8d93819)
