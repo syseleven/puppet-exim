@@ -27,14 +27,14 @@ class exim (
   $template_vars = undef,
 ) inherits exim::params {
 
-  if defined(Class[apache::nagioscheck]) {
-    $trusted_users_apache = ['apache']
+  if defined(Class[apache]) or defined(Class[apache::nagioscheck]) {
+    $trusted_users_apache = $exim::params::trusted_users_apache
   } else {
     $trusted_users_apache = []
   }
 
-  if defined(Class[nginx::nagioscheck]) {
-    $trusted_users_nginx = ['nginx']
+  if defined(Class[nginx]) or defined(Class[nginx::nagioscheck]) {
+    $trusted_users_nginx = $exim::params::trusted_users_nginx
   } else {
     $trusted_users_nginx = []
   }

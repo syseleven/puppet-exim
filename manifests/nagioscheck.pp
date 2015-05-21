@@ -42,6 +42,17 @@ class exim::nagioscheck (
       zabbix_agent::config_snippet::snippet_set { 'exim':
         content => "UserParameter=get_mailcount,/usr/local/bin/get_mailcount --logfile ${logfile}\nUserParameter=mailqueue,/usr/sbin/exim -bpc",
       }
+
+      $zabbix_group = $::osfamily ? {
+        'Debian' => ['Debian-exim', 'adm'],
+        default  => 'mail',
+      }
+
+      user { 'zabbix_exim_group':
+        name    => 'zabbix',
+        groups  => $zabbix_group,
+        require => Package[zabbix-agent],
+      }
     }
 
     augeas { 'is_nagios_mail_member':
