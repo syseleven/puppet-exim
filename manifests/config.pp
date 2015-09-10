@@ -23,6 +23,18 @@ class exim::config () {
           fail("adminserver not set to IP/DNS of adminserver: '$exim::adminserver'")
         }
 
+      if ($smarthost_auth)  {
+        if (! $exim::smarthost_interface) {
+            fail("smarthost_interface not set to IP/DNS of smarthost_interface: '$exim::smarthost_interface'")
+        }
+        if (! $exim::smarthost_user) {
+            fail('smarthost_user not set')
+        }
+        if (! $exim::smarthost_password) {
+            fail('smarthost_password not set')
+        }
+      }
+
       file { $exim::cfgfile:
         mode    => '0640',
         content => template('exim/exim_slave.conf.erb'),

@@ -25,6 +25,12 @@ class exim (
   $monit_tests = ['if 3 restarts within 18 cycles then timeout'],
   $enable_nagioscheck = true,
   $template_vars = undef,
+  $smarthost_auth = false,
+  $smarthost_user = false,
+  $smarthost_password = false,
+  $smarthost_interface = false,
+  $smarthost_connection_max_messages = 100,
+  $smarthost_port = 25
 ) inherits exim::params {
 
   if defined(Class[apache]) or defined(Class[apache::nagioscheck]) {

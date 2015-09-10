@@ -50,6 +50,18 @@ Sets up the Exim MTA.
       enable nagios and zabbix check
     $template_vars = undef
       extra custom parameters for the config file  
+    $smarthost_auth = false
+      En- or disable smarthost auth
+    $smarthost_user = false
+      Define smarthost auth user
+    $smarthost_password = false
+      Define smarthost auth password
+    $smarthost_interface = false
+      Define IP over which interface the smarthots shall be connected
+    $smarthost_connection_max_messages = 100
+    $smarthost_port = 25
+      Define connect port of smarthost
+
 
 
 ### Sample usage
@@ -62,3 +74,20 @@ Sets up the Exim MTA.
         example: 'foo@domain.tld'
       template_vars:
         'extract_addresses_remove_arguments': false
+
+
+#### smarthost auth ####
+(hiera example)
+
+classes:
+  - exim
+
+exim::role: slave
+exim::postmaster: foo@bar.tld
+exim::enable_nagioscheck: false
+exim::smarthost_auth: true
+exim::adminserver: smtp.domain.net
+exim::smarthost_port: 587
+exim::smarthost_user: foo
+exim::smarthost_password: bar
+exim::smarthost_interface: "%{::ipaddress_eth1}"

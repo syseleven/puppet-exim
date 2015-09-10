@@ -1,3 +1,5 @@
+1.6.0 (dbfad95)
+  - slave mit username/password unterstuetzen #pp-2579
 1.5.6 (a1cb2437)
   - Fix Zabbix und nagios user for Ubuntu #pp-2410
 1.5.5 (bcc7f76)

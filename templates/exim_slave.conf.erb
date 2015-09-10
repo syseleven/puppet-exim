@@ -522,10 +522,18 @@ acl_check_data:
 
 begin routers
 
+<% if @smarthost_auth -%>
+outgoing:
+  driver = manualroute
+  domains = ! +local_domains
+  transport = smarthost_auth
+  route_list = * <%= @adminserver %>
+<% else -%>
 smart_route:
   driver = manualroute
   transport = remote_smtp
   route_list = * <%= scope.lookupvar('exim::adminserver') %>
+<% end -%>
 
 # This router routes to remote hosts over SMTP by explicit IP address,
 # when an email address is given in "domain literal" form, for example,
@@ -682,6 +690,16 @@ localuser:
 
 begin transports
 
+<% if @smarthost_auth -%>
+smarthost_auth:
+  driver = smtp
+  port = <%= @smarthost_port %>
+  interface = <%= @smarthost_interface %>
+  hosts_try_auth = <%= @adminserver %>
+  connection_max_messages = <%= @smarthost_connection_max_messages %>
+  #batch_max = 100
+  #remote_max_parallel = 100
+<% end %>
 
 # This transport is used for delivering messages over SMTP connections.
 
@@ -807,6 +825,14 @@ begin rewrite
 # messages from authenticated users from anywhere on the Internet.
 
 begin authenticators
+
+<% if @smarthost_auth -%>
+plain:
+     driver = plaintext
+     public_name = PLAIN
+     client_send = "^<%= @smarthost_user -%>^<%= @smarthost_password %>"
+<% end %>
+
 
 # PLAIN authentication has no server prompts. The client sends its
 # credentials in one lump, containing an authorization ID (which we do not
