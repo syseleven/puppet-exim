@@ -522,12 +522,6 @@ acl_check_data:
 
 begin routers
 
-smart_route:
-  driver = manualroute
-  domains = !+local_domains
-  transport = remote_smtp
-  route_list = * <%= scope.lookupvar('exim::adminserver') %>
-
 # This router routes to remote hosts over SMTP by explicit IP address,
 # when an email address is given in "domain literal" form, for example,
 # <user@[192.168.35.64]>. The RFCs require this facility. However, it is
@@ -556,12 +550,12 @@ smart_route:
 # If the DNS lookup fails, no further routers are tried because of the no_more
 # setting, and consequently the address is unrouteable.
 
-dnslookup:
-  driver = dnslookup
-  domains = ! +local_domains
-  transport = remote_smtp
-  ignore_target_hosts = 0.0.0.0 : 127.0.0.0/8
-  no_more
+#dnslookup:
+#  driver = dnslookup
+#  domains = ! +local_domains
+#  transport = remote_smtp
+#  ignore_target_hosts = 0.0.0.0 : 127.0.0.0/8
+#  no_more
 
 
 # The remaining routers handle addresses in the local domain(s), that is those
@@ -596,6 +590,13 @@ system_aliases:
 # user = exim
   file_transport = address_file
   pipe_transport = address_pipe
+
+# system_aliases before smart_route (pp-2563)
+smart_route:
+  driver = manualroute
+  domains = !+local_domains
+  transport = remote_smtp
+  route_list = * <%= scope.lookupvar('exim::adminserver') %>
 
 
 # This router handles forwarding using traditional .forward files in users'
@@ -786,6 +787,10 @@ begin retry
 
 begin rewrite
 
+<% scope.lookupvar('exim::rewrite_targets').sort.uniq.each do |a|-%>
+<%=a-%>
+
+<%end-%>
 
 
 ######################################################################
