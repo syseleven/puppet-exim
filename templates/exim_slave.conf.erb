@@ -60,7 +60,15 @@ primary_hostname = <%= scope.lookupvar("exim::primary_hostname") %>
 
 domainlist local_domains = <%= scope.lookupvar('exim::maildomain') %>
 domainlist relay_to_domains =
-hostlist   relay_from_hosts = 127.0.0.1 : ::::1
+hostlist   relay_from_hosts = 127.0.0.1 : ::::1<%
+if @relay_from_hosts.kind_of?(Array) -%>
+<% @relay_from_hosts.each do |rfh| -%>
+ : <%= rfh -%>
+<% end -%>
+<% else -%>
+ : <%= @relay_from_hosts -%>
+<% end -%>
+
 
 # Most straightforward access control requirements can be obtained by
 # appropriate settings of the above options. In more complicated situations,
@@ -803,6 +811,10 @@ begin retry
 
 begin rewrite
 
+<% scope.lookupvar('exim::rewrite_targets').sort.uniq.each do |a|-%>
+<%=a-%>
+
+<%end-%>
 
 
 ######################################################################

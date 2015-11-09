@@ -77,17 +77,25 @@ Sets up the Exim MTA.
 
 
 #### smarthost auth ####
-(hiera example)
 
-classes:
-  - exim
+    exim:
+      role: slave
+      postmaster: foo@bar.tld
+      enable_nagioscheck: false
+      smarthost_auth: true
+      adminserver: smtp.domain.net
+      smarthost_port: 587
+      smarthost_user: foo
+      smarthost_password: bar
+      smarthost_interface: "%{::ipaddress_eth1}"
 
-exim::role: slave
-exim::postmaster: foo@bar.tld
-exim::enable_nagioscheck: false
-exim::smarthost_auth: true
-exim::adminserver: smtp.domain.net
-exim::smarthost_port: 587
-exim::smarthost_user: foo
-exim::smarthost_password: bar
-exim::smarthost_interface: "%{::ipaddress_eth1}"
+#### Adminserver as smarthost ####
+
+    exim:
+      role: slave
+      postmaster: webserver@example.org
+      primary_hostname: admin.example.org
+      adminserver: relayhost@example.org
+      rewrite_targets:
+        - '^(.*)@(.*)example\$ no_reply@example.org sfF'
+      relay_from_hosts: 10.42.42.0/24

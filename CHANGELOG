@@ -1,3 +1,5 @@
+1.8.0 (9753da5fe3939ee34a73d09c7dd60538906da334)
+  - add rewrite_targets and relay_from_hosts to slave config too
 1.7.0 (b0190c2)
   - honor /etc/aliases but also the smarthost (only for
     sys11 management_platform template) #pp-2590
