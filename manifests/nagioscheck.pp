@@ -86,6 +86,7 @@ class exim::nagioscheck (
     monit::check_process::process_set { $service:
       ensure => $monit_check,
       tests  => $monit_tests,
+      pid    => $exim::params::pid,
     }
   }
 
