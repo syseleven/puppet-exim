@@ -29,6 +29,7 @@ class exim::alias () {
     'root'     => $exim::postmaster,
     'apache'   => $exim::postmaster,
     'nginx'    => $exim::postmaster,
+    'www-data' => $exim::postmaster, 
     'devnull'  => '/dev/null'
   }
   $default_aliases_keys = keys($default_aliases)

@@ -1,3 +1,5 @@
+1.9.1
+  - Fix www-data required in mailaliases
 1.9.0 (16563ea)
   - Fix PID file path under Ubuntu pp-2715 
 1.8.0 (9753da5fe3939ee34a73d09c7dd60538906da334)
