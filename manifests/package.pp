@@ -27,7 +27,7 @@ class exim::package () {
 
       sys11lib::ensure_key_value { 'exim_package_mask':
         file      => '/etc/portage/package.mask',
-        key       => ">$exim::package",
+        key       => ">${exim::package}",
         delimiter => '-',
         value     => $exim::version,
         before    => Package[$exim::package],

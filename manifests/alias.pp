@@ -9,7 +9,7 @@ class exim::alias () {
   define aliases_set($aliases = undef) {
     sys11lib::ensure_key_value { $name:
       file      => $exim::params::aliases_target,
-      key       => "$name:",
+      key       => "${name}:",
       value     => $aliases[$name],
       delimiter => ' ',
       notify    => Exec['newaliases'],
@@ -29,7 +29,7 @@ class exim::alias () {
     'root'     => $exim::postmaster,
     'apache'   => $exim::postmaster,
     'nginx'    => $exim::postmaster,
-    'www-data' => $exim::postmaster, 
+    'www-data' => $exim::postmaster,
     'devnull'  => '/dev/null'
   }
   $default_aliases_keys = keys($default_aliases)

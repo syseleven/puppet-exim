@@ -20,12 +20,12 @@ class exim::config () {
     }
     'slave': {
       if (! $exim::adminserver) {
-          fail("adminserver not set to IP/DNS of adminserver: '$exim::adminserver'")
+          fail("adminserver not set to IP/DNS of adminserver: '${exim::adminserver}'")
         }
 
       if ($smarthost_auth)  {
         if (! $exim::smarthost_interface) {
-            fail("smarthost_interface not set to IP/DNS of smarthost_interface: '$exim::smarthost_interface'")
+            fail("smarthost_interface not set to IP/DNS of smarthost_interface: '${exim::smarthost_interface}'")
         }
         if (! $exim::smarthost_user) {
             fail('smarthost_user not set')
@@ -42,7 +42,7 @@ class exim::config () {
     }
     'management_platform': {
       if (! $exim::adminserver) {
-          fail("adminserver not set to IP/DNS of adminserver: '$exim::adminserver'")
+          fail("adminserver not set to IP/DNS of adminserver: '${exim::adminserver}'")
         }
 
       file { $exim::cfgfile:
@@ -51,17 +51,17 @@ class exim::config () {
       }
     }
     default: {
-      fail("Unknown role: $exim::role")
+      fail("Unknown role: ${exim::role}")
     }
   }
 
   if $::osfamily == 'Debian' {
     file {
-      "$exim::cfgdir/exim4.conf.template":
+      "${exim::cfgdir}/exim4.conf.template":
         ensure => absent;
-      "$exim::cfgdir/passwd.client":
+      "${exim::cfgdir}/passwd.client":
         ensure => absent;
-      "$exim::cfgdir/update-exim4.conf.conf":
+      "${exim::cfgdir}/update-exim4.conf.conf":
         ensure  => file,
         content => '',
     }
