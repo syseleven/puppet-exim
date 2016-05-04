@@ -58,7 +58,7 @@ class exim::nagioscheck (
       onlyif  => 'match /files/etc/group/mail size != 0',
       notify  => Service['nrpe'],
       changes => [
-        'set /files/etc/group/mail/user[.=\'nagios\'] nagios'
+        "set /files/etc/group/mail/user[.='$nagios::params::nagios_user'] $nagios::params::nagios_user"
       ],
 
     }
@@ -70,7 +70,7 @@ class exim::nagioscheck (
         onlyif  => 'match /files/etc/group/Debian-exim size != 0',
         notify  => Service['nrpe'],
         changes => [
-          'set /files/etc/group/Debian-exim/user[.=\'nagios\'] nagios'
+          "set /files/etc/group/Debian-exim/user[.='$nagios::params::nagios_user'] $nagios::params::nagios_user"
         ],
 
       }
