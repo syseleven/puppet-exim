@@ -51,14 +51,14 @@
 # uname() function is called to obtain the name. In many cases this does
 # the right thing and you need not set anything explicitly.
 
-primary_hostname = <%= scope.lookupvar("exim::primary_hostname") %>
+primary_hostname = <%= scope['exim::primary_hostname'] %>
 
 # The next three settings create two lists of domains and one list of hosts.
 # These lists are referred to later in this configuration using the syntax
 # +local_domains, +relay_to_domains, and +relay_from_hosts, respectively. They
 # are all colon-separated lists:
 
-domainlist local_domains = <%= scope.lookupvar('exim::maildomain') %>
+domainlist local_domains = <%= scope['exim::maildomain'] %>
 domainlist relay_to_domains =
 hostlist   relay_from_hosts = 127.0.0.1 : ::::1
 
@@ -151,8 +151,8 @@ acl_smtp_data = acl_check_data
 # puppet: exim::tls_advertise_hosts
 # tls_advertise_hosts = *
 
-<% if scope.lookupvar('exim::tls_advertise_hosts')-%>
-tls_advertise_hosts = <%= scope.lookupvar('exim::tls_advertise_hosts')%>
+<% if scope['exim::tls_advertise_hosts']-%>
+tls_advertise_hosts = <%= scope['exim::tls_advertise_hosts'] %>
 <%end -%>
 
 # Specify the location of the Exim server's TLS certificate and private key.
@@ -164,12 +164,12 @@ tls_advertise_hosts = <%= scope.lookupvar('exim::tls_advertise_hosts')%>
 # puppet: exim::tls_certificate and exim::tls_privatekey
 # tls_certificate = /etc/ssl/exim.crt
 # tls_privatekey = /etc/ssl/exim.pem
-<% if scope.lookupvar('exim::tls_certificate')-%>
-tls_certificate = <%= scope.lookupvar('exim::tls_certificate')%>
+<% if scope['exim::tls_certificate'] -%>
+tls_certificate = <%= scope['exim::tls_certificate']  %>
 <%end -%>
 
-<% if scope.lookupvar('exim::tls_privatekey')-%>
-tls_privatekey = <%= scope.lookupvar('exim::tls_privatekey')%>
+<% if scope['exim::tls_privatekey'] -%>
+tls_privatekey = <%= scope['exim::tls_privatekey'] %>
 <%end -%>
 
 # In order to support roaming users who wish to send email from anywhere,
@@ -231,7 +231,7 @@ tls_privatekey = <%= scope.lookupvar('exim::tls_privatekey')%>
 # an alias for root that redirects such mail to a human administrator.
 
 never_users = root
-trusted_users = <%= scope.lookupvar("exim::real_trusted_users").join(' : ') %>
+trusted_users = <%= scope['exim::real_trusted_users'].join(' : ') %>
 
 # The setting below causes Exim to do a reverse DNS lookup on all incoming
 # IP calls, in order to get the true host name. If you feel this is too
@@ -326,6 +326,13 @@ timeout_frozen_after = 7d
 # from Russian administrators of issues until they disable this check,
 # because of some popular, yet buggy, mail composition software.
 
+<%- if scope['exim::keep_environment'] -%>
+# set option to empty value to avoid warning.
+keep_environment = <%= scope['exim::keep_environment'] %>
+<%- end -%>
+<%- if scope['exim::add_environment'] -%>
+add_environment = <%= scope['exim::add_environment'] %>
+<%- end -%>
 
 ######################################################################
 #                       ACL CONFIGURATION                            #
@@ -586,7 +593,7 @@ system_aliases:
   driver = redirect
   allow_fail
   allow_defer
-  data = ${lookup{$local_part}lsearch{<%=scope.lookupvar('exim::params::aliases_target')%>}}
+  data = ${lookup{$local_part}lsearch{<%= scope['exim::params::aliases_target'] %>}}
 # user = exim
   file_transport = address_file
   pipe_transport = address_pipe
@@ -596,7 +603,7 @@ smart_route:
   driver = manualroute
   domains = !+local_domains
   transport = remote_smtp
-  route_list = * <%= scope.lookupvar('exim::adminserver') %>
+  route_list = * <%= scope['exim::adminserver'] %>
 
 
 # This router handles forwarding using traditional .forward files in users'
@@ -787,7 +794,7 @@ begin retry
 
 begin rewrite
 
-<% scope.lookupvar('exim::rewrite_targets').sort.uniq.each do |a|-%>
+<% scope['exim::rewrite_targets'].sort.uniq.each do |a|-%>
 <%=a-%>
 
 <%end-%>

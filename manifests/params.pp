@@ -13,6 +13,8 @@ class exim::params () {
       $trusted_users_apache = ['apache']
       $trusted_users_nginx = ['nginx']
       $pid = undef
+      $add_environment = false
+      $keep_environment = false
     }
     'ubuntu', 'debian': {
       $package = 'exim4'
@@ -24,6 +26,8 @@ class exim::params () {
       $trusted_users_apache = ['www-data']
       $trusted_users_nginx = ['www-data']
       $pid = '/var/run/exim4/exim.pid'
+      $add_environment = false
+      $keep_environment = '' # lint:ignore:empty_string_assignment
     }
     'centos': {
       $package = 'exim'
@@ -35,6 +39,8 @@ class exim::params () {
       $trusted_users_apache = ['apache']
       $trusted_users_nginx = ['nginx']
       $pid = undef
+      $add_environment = false
+      $keep_environment = '' # lint:ignore:empty_string_assignment
     }
     default: {
       fail("Unknown OS: ${::operatingsystem}")

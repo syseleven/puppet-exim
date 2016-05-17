@@ -30,7 +30,9 @@ class exim (
   $smarthost_password = false,
   $smarthost_interface = false,
   $smarthost_connection_max_messages = 100,
-  $smarthost_port = 25
+  $smarthost_port = 25,
+  $add_environment = $exim::params::add_environment,
+  $keep_environment = $exim::params::keep_environment,
 ) inherits exim::params {
 
   if defined(Class[apache]) or defined(Class[apache::nagioscheck]) {
