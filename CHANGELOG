@@ -1,3 +1,5 @@
+1.9.2
+  - FIX zabbix and nagios user groups #pp-3025
 1.9.1
   - Fix www-data required in mailaliases
 1.9.0 (16563ea)

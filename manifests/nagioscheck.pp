@@ -43,36 +43,38 @@ class exim::nagioscheck (
         content => "UserParameter=get_mailcount,/usr/local/bin/get_mailcount --logfile ${logfile}\nUserParameter=mailqueue,/usr/sbin/exim -bpc",
       }
 
-      unless $::osfamily == 'Debian' {
-        user { 'zabbix_exim_group':
-          name    => 'zabbix',
-          groups  => 'mail',
-          require => Package[zabbix-agent],
+      if $::osfamily == 'Debian' {
+        exec { 'add_zabbix_to_Debian-exim_group':
+          path    => '/bin:/usr/bin:/sbin:/usr/sbin',
+          unless  => 'getent group Debian-exim | grep -q zabbix',
+          command => 'usermod -aG Debian-exim zabbix',
+          notify  => Service['zabbix-agentd'],
+        }
+      } else {
+        exec { 'add_zabbix_to_mail_group':
+          path    => '/bin:/usr/bin:/sbin:/usr/sbin',
+          unless  => 'getent group mail | grep -q zabbix',
+          command => 'usermod -aG mail zabbix',
+          notify  => Service['zabbix-agentd'],
         }
       }
-
     }
 
-    augeas { 'is_nagios_mail_member':
-      context => '/files/etc/group',
-      onlyif  => 'match /files/etc/group/mail size != 0',
+    include nagios::nrpe
+    exec { 'add_nagios_to_mail_group':
+      path    => '/bin:/usr/bin:/sbin:/usr/sbin',
+      unless  => "getent group mail | grep -q nagios",
+      command => "usermod -aG mail nagios",
       notify  => Service['nrpe'],
-      changes => [
-        'set /files/etc/group/mail/user[.=\'nagios\'] nagios'
-      ],
-
     }
 
     # On Debian, the nagios-user _also_ needs to be in Debian-exim group for mailq
     if $::osfamily == 'Debian' {
-      augeas { 'is_nagios_debian-exim_member':
-        context => '/files/etc/group',
-        onlyif  => 'match /files/etc/group/Debian-exim size != 0',
+      exec { 'add_nagios_to_Debian-exim_group':
+        path    => '/bin:/usr/bin:/sbin:/usr/sbin',
+        unless  => "getent group Debian-exim | grep -q nagios",
+        command => "usermod -aG Debian-exim nagios",
         notify  => Service['nrpe'],
-        changes => [
-          'set /files/etc/group/Debian-exim/user[.=\'nagios\'] nagios'
-        ],
-
       }
     }
 
