@@ -1,3 +1,5 @@
+1.9.3
+  - Exim::config fix relay host config #pp-3077 
 1.9.2
   - FIX zabbix and nagios user groups #pp-3025
 1.9.1

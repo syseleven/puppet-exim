@@ -61,8 +61,8 @@ primary_hostname = <%= scope['exim::primary_hostname'] %>
 domainlist local_domains = <%= scope['exim::maildomain'] %>
 domainlist relay_to_domains =
 hostlist   relay_from_hosts = 127.0.0.1 : ::::1<%
-if scope['exim::internal_network'] != '' -%>
- : <%= scope['exim::internal_network'] -%>
+if scope['exim::config::internal_network'] != '' -%>
+ : <%= scope['exim::config::internal_network'] -%>
 <% end -%>
 <% if @relay_from_hosts.kind_of?(Array) -%>
 <% @relay_from_hosts.each do |rfh| -%>
