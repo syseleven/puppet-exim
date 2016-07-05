@@ -99,3 +99,14 @@ Sets up the Exim MTA.
       rewrite_targets:
         - '^(.*)@(.*)example\$ no_reply@example.org sfF'
       relay_from_hosts: 10.42.42.0/24
+
+### Exim keep_environment problem ###
+
+    exim:
+      keep_environment: false # entferne Parameter für exim <= 4.85 bzw. 4.82-3ubuntu2
+
+    or
+
+    exim:
+      keep_environment: "" # erzwinge Parameter ohne Wert für exim >= 4.86 bzw. 4.82-3ubuntu2.1
+
