@@ -63,8 +63,8 @@ class exim::nagioscheck (
     include nagios::nrpe
     exec { 'add_nagios_to_mail_group':
       path    => '/bin:/usr/bin:/sbin:/usr/sbin',
-      unless  => "getent group mail | grep -q nagios",
-      command => "usermod -aG mail nagios",
+      unless  => "getent group mail | grep -q ${nagios::params::nagios_user}",
+      command => "usermod -aG mail ${nagios::params::nagios_user}",
       notify  => Service['nrpe'],
     }
 
@@ -72,8 +72,8 @@ class exim::nagioscheck (
     if $::osfamily == 'Debian' {
       exec { 'add_nagios_to_Debian-exim_group':
         path    => '/bin:/usr/bin:/sbin:/usr/sbin',
-        unless  => "getent group Debian-exim | grep -q nagios",
-        command => "usermod -aG Debian-exim nagios",
+        unless  => "getent group Debian-exim | grep -q ${nagios::params::nagios_user}",
+        command => "usermod -aG Debian-exim ${nagios::params::nagios_user}",
         notify  => Service['nrpe'],
       }
     }
