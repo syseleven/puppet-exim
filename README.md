@@ -5,8 +5,50 @@ Sets up the Exim MTA.
 * [Official documentation](http://www.exim.org/exim-html-current/doc/html/spec_html/index.html)
 * Exim puppet module [changelog](CHANGELOG)
 
+## exim::init
+
+Base class to use the exim module.
+
+### Examples
+
+```yaml
+# Adminserver with mailrelay
+exim:
+  postmaster: 'agent@agentur.de'
+  role: 'admin'
+  aliases:
+    oxid: 'shopware@domain.tld'
+    example: 'foo@domain.tld'
+  template_vars:
+    'extract_addresses_remove_arguments': false
+
+# Sattelite (slave) with smarthost auth
+exim:
+  role: slave
+  postmaster: foo@bar.tld
+  enable_nagioscheck: false
+  smarthost_auth: true
+  adminserver: smtp.domain.net
+  smarthost_port: 587
+  smarthost_user: foo
+  smarthost_password: bar
+  smarthost_interface: "%{::ipaddress_eth1}"
+
+# Adminserver as smarthost ####
+
+exim:
+  role: slave
+  postmaster: webserver@example.org
+  primary_hostname: admin.example.org
+  adminserver: relayhost@example.org
+  rewrite_targets:
+    - '^(.*)@(.*)example\$ no_reply@example.org sfF'
+  relay_from_hosts: 10.42.42.0/24
+```
+
 ### Parameters
 
+```ruby
     $role
       Set role to admin or slave
       The role 'management_platform' is for Ubuntu hosts in the Management Platform 
@@ -61,52 +103,61 @@ Sets up the Exim MTA.
     $smarthost_connection_max_messages = 100
     $smarthost_port = 25
       Define connect port of smarthost
+```
 
+### Troubleshooting
 
+Common errors and how they can be solved
 
-### Sample usage
+#### Exim keep_environment
 
-    exim:
-      postmaster: 'agent@agentur.de'
-      role: 'admin'
-      aliases:
-        oxid: 'shopware@domain.tld'
-        example: 'foo@domain.tld'
-      template_vars:
-        'extract_addresses_remove_arguments': false
+```yaml
+exim:
+  keep_environment: false # entferne Parameter für exim <= 4.85 bzw. 4.82-3ubuntu2
 
+# Alternativ
+exim:
+  keep_environment: "" # erzwinge Parameter ohne Wert für exim >= 4.86 bzw. 4.82-3ubuntu2.1
+```
 
-#### smarthost auth ####
+## exim::nagioscheck
 
-    exim:
-      role: slave
-      postmaster: foo@bar.tld
-      enable_nagioscheck: false
-      smarthost_auth: true
-      adminserver: smtp.domain.net
-      smarthost_port: 587
-      smarthost_user: foo
-      smarthost_password: bar
-      smarthost_interface: "%{::ipaddress_eth1}"
+Configure monitoring for for Exim mailservices
 
-#### Adminserver as smarthost ####
+### Examples
 
-    exim:
-      role: slave
-      postmaster: webserver@example.org
-      primary_hostname: admin.example.org
-      adminserver: relayhost@example.org
-      rewrite_targets:
-        - '^(.*)@(.*)example\$ no_reply@example.org sfF'
-      relay_from_hosts: 10.42.42.0/24
+```yaml
+# check smtp on IPv6 address for localhost
+exim::nagioscheck:
+  smtp_ip_family: 'inet6'
 
-### Exim keep_environment problem ###
+# check smtp on custom hostname
+exim::nagioscheck:
+  smtp_hostname: 'example.com'
 
-    exim:
-      keep_environment: false # entferne Parameter für exim <= 4.85 bzw. 4.82-3ubuntu2
+# Use custom logfile
+exim::nagioscheck:
+  logfile: '/var/log/exim4/smtp_error.log'
 
-    or
+# Customize mailq monitoring limits
+exim::nagioscheck:
+  warn_limit: 500
+  crit_limit: 3000
+```
 
-    exim:
-      keep_environment: "" # erzwinge Parameter ohne Wert für exim >= 4.86 bzw. 4.82-3ubuntu2.1
+### Parameters
 
+```ruby
+  $warn_limit = 100,
+  $crit_limit = 1000,
+    MailQ monitoring limits
+  $logfile = $exim::params::logfile,
+    Logfile to check for errors
+  $monit_check = 'present',
+  $monit_tests = ['if 3 restarts within 18 cycles then timeout'],
+  $service = $exim::params::service,
+    Servicename monit will monitor
+  $smtp_hostname = 'localhost',
+  $smtp_ip_family = 'inet',
+    SMTP check network config, allowed values: 'inet','inet6','any', defaults to 'inet'
+```

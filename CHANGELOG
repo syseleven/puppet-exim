@@ -1,3 +1,5 @@
+1.10.0
+  - Make exim::nagioscheck IPv4/IPv6 aware #pp-3172
 1.9.3
   - Exim::config fix relay host config #pp-3077 
 1.9.2

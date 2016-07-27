@@ -7,12 +7,14 @@
 # class.
 #
 class exim::nagioscheck (
-  $service = $exim::params::service,
   $warn_limit = 100,
   $crit_limit = 1000,
   $logfile = $exim::params::logfile,
+  $smtp_hostname = 'localhost',
+  $smtp_ip_family = 'inet',
   $monit_check = 'present',
   $monit_tests = ['if 3 restarts within 18 cycles then timeout'],
+  $service = $exim::params::service,
 ) inherits exim::params {
 
   if defined(Class[nagios::nrpe]) {
@@ -20,9 +22,17 @@ class exim::nagioscheck (
     #needed to have nagios::nrpe::plugindir loaded before using
     include nagios::nrpe
 
-    nagios::nrpecmd { 'check_smtp':
-      cmd => "${nagios::nrpe::plugindir}/check_smtp -H localhost",
+    case $smtp_ip_family {
+      'inet':   { $check_smtp_ip_family = '-4' }
+      'inet6':  { $check_smtp_ip_family = '-6' }
+      'any':    { $check_smtp_ip_family = undef }
+      default: { fail('You must specify either \'inet\', \'inet6\' or \'any\' for exim::nagioscheck::smtp_ip_family') }
     }
+    $check_smtp_options = join(delete_undef_values([$check_smtp_ip_family,'-H',$smtp_hostname]),' ')
+    nagios::nrpecmd { 'check_smtp':
+      cmd => "${nagios::nrpe::plugindir}/check_smtp ${check_smtp_options}",
+    }
+
     nagios::nrpecmd { 'check_mailq':
       cmd => "${nagios::nrpe::plugindir}/check_mailq -w ${warn_limit} -c ${crit_limit} -M exim",
     }

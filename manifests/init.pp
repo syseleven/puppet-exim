@@ -20,6 +20,8 @@ class exim (
   $aliases = undef,
   $relay_from_internal_network = true,
   $relay_from_hosts = [],
+  $monitoring_smtp_hostname = 'localhost',
+  $monitoring_smtp_ip_family = 'inet',
   $logfile = $exim::params::logfile,
   $monit_check = 'present',
   $monit_tests = ['if 3 restarts within 18 cycles then timeout'],
@@ -58,13 +60,15 @@ class exim (
   }
   if $enable_nagioscheck {
     class { 'exim::nagioscheck':
-      service     => $service,
-      warn_limit  => $warn_limit,
-      crit_limit  => $crit_limit,
-      logfile     => $logfile,
-      monit_check => $monit_check,
-      monit_tests => $monit_tests,
-      require     => Class['exim::service'],
+      warn_limit     => $warn_limit,
+      crit_limit     => $crit_limit,
+      logfile        => $logfile,
+      smtp_hostname  => $monitoring_smtp_hostname,
+      smtp_ip_family => $monitoring_smtp_ip_family,
+      monit_check    => $monit_check,
+      monit_tests    => $monit_tests,
+      service        => $service,
+      require        => Class['exim::service'],
     }
   }
   class { 'exim::alias':
