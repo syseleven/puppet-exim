@@ -1,3 +1,5 @@
+1.11.0
+  - Add KitchenCI tests #pp-3251
 1.10.0
   - Make exim::nagioscheck IPv4/IPv6 aware #pp-3172
 1.9.3

@@ -39,4 +39,11 @@ class exim::package () {
     ensure => $exim::version,
     alias  => 'exim',
   }
+
+  if $::osfamily == 'Debian' {
+    package { 'bsd-mailx':
+      ensure  => present,
+      require => Package[$exim::package],
+    }
+  }
 }
