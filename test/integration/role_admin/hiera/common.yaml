@@ -1,0 +1,6 @@
+classes:
+  - ve_base
+  - exim
+
+exim::postmaster: 'exim@syseleven.de'
+exim::role: 'admin'
