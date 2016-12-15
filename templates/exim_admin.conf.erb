@@ -64,12 +64,12 @@ hostlist   relay_from_hosts = 127.0.0.1 : ::::1<%
 if scope['exim::config::internal_network'] != '' -%>
  : <%= scope['exim::config::internal_network'] -%>
 <% end -%>
-<% if scope['exim::relay_from_hosts'].kind_of?(Array) -%>
-<% scope['exim::relay_from_hosts'].each do |rfh| -%>
+<% if @relay_from_hosts.kind_of?(Array) -%>
+<% @relay_from_hosts.each do |rfh| -%>
  : <%= rfh -%>
 <% end -%>
 <% else -%>
- : <%= scope['exim::relay_from_hosts'] -%>
+ : <%= @relay_from_hosts -%>
 <% end -%>
 
 
@@ -142,9 +142,9 @@ acl_smtp_data = acl_check_data
 
 # spamd_address = 127.0.0.1 783
 
-<% if ! scope['exim::template_vars'].empty? -%>
+<% if @template_vars -%>
 # Custom parameters
-<% scope['exim::template_vars'].each do |key,val| -%>
+<% @template_vars.each do |key,val| -%>
 <%= key %> = <%= val %>
 <% end -%>
 <% end -%>
@@ -162,7 +162,7 @@ acl_smtp_data = acl_check_data
 # puppet: exim::tls_advertise_hosts
 # tls_advertise_hosts = *
 
-<% if scope['exim::tls_advertise_hosts'] -%>
+<% if scope['exim::tls_advertise_hosts']-%>
 tls_advertise_hosts = <%= scope['exim::tls_advertise_hosts'] %>
 <%end -%>
 

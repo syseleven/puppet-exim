@@ -90,7 +90,7 @@ exim:
       additional hosts to allow relaying
     $enable_nagioscheck = true
       enable nagios and zabbix check
-    $template_vars = {}
+    $template_vars = undef
       extra custom parameters for the config file  
     $smarthost_auth = false
       En- or disable smarthost auth

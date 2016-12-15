@@ -26,7 +26,7 @@ class exim (
   $monit_check = 'present',
   $monit_tests = ['if 3 restarts within 18 cycles then timeout'],
   $enable_nagioscheck = true,
-  $template_vars = {},
+  $template_vars = undef,
   $smarthost_auth = false,
   $smarthost_user = false,
   $smarthost_password = false,
