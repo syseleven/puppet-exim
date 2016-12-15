@@ -6,7 +6,7 @@ class exim::package () {
 
   if $::operatingsystem == 'gentoo' {
 
-    if $exim::useflags {
+    if $exim::useflags != '' {
       gentoo::useflag { $exim::package:
         flags   => $exim::useflags,
         version => $exim::version,

@@ -131,9 +131,9 @@ acl_smtp_data = acl_check_data
 
 # spamd_address = 127.0.0.1 783
 
-<% if @template_vars -%>
+<% if ! scope['exim::template_vars'].empty? -%>
 # Custom parameters
-<% @template_vars.each do |key,val| -%>
+<% scope['exim::template_vars'].each do |key,val| -%>
 <%= key %> = <%= val %>
 <% end -%>
 <% end -%>
@@ -151,7 +151,7 @@ acl_smtp_data = acl_check_data
 # puppet: exim::tls_advertise_hosts
 # tls_advertise_hosts = *
 
-<% if scope['exim::tls_advertise_hosts']-%>
+<% if scope['exim::tls_advertise_hosts'] -%>
 tls_advertise_hosts = <%= scope['exim::tls_advertise_hosts'] %>
 <%end -%>
 
