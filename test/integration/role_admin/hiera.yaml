@@ -3,4 +3,5 @@
 :yaml:
   :datadir: /var/lib/hiera
 :hierarchy:
-  - common
+  - global
+  - module
