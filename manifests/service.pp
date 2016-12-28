@@ -7,6 +7,7 @@ class exim::service () {
     enable     => true,
     hasrestart => true,
     hasstatus  => true,
+    tag        => 'openssl-restart-required',
   }
 
 }
