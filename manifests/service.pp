@@ -1,8 +1,10 @@
 # Class: exim::service
 #
-class exim::service () {
+class exim::service (
+  $service,
+) {
 
-  service { $exim::service:
+  service { $service:
     ensure     => running,
     enable     => true,
     hasrestart => true,

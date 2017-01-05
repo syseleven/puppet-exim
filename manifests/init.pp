@@ -6,8 +6,8 @@ class exim (
   $package = $exim::params::package,
   $service = $exim::params::service,
   $version = 'latest',
-  $useflags = '',
-  $adminserver = '',
+  $useflags = undef,
+  $adminserver = undef,
   $warn_limit = '100',
   $crit_limit = '1000',
   $maildomain = '@',
@@ -18,15 +18,18 @@ class exim (
   $tls_certificate = false,
   $tls_privatekey = false,
   $aliases = undef,
+  $aliases_target = $exim::params::aliases_target,
   $relay_from_internal_network = true,
   $relay_from_hosts = [],
   $monitoring_smtp_hostname = 'localhost',
   $monitoring_smtp_ip_family = 'inet',
+  $cfgdir = $exim::params::cfgdir,
+  $cfgfile = $exim::params::cfgfile,
   $logfile = $exim::params::logfile,
   $monit_check = 'present',
   $monit_tests = ['if 3 restarts within 18 cycles then timeout'],
   $enable_nagioscheck = true,
-  $template_vars = undef,
+  $template_vars = {},
   $smarthost_auth = false,
   $smarthost_user = false,
   $smarthost_password = false,
@@ -53,9 +56,38 @@ class exim (
   $real_trusted_users = split(inline_template('<%= (@trusted_users + @trusted_users_apache + @trusted_users_nginx).join(",") %>'), ',')
 
   anchor { 'exim::start': }->
-  class { 'exim::package': }->
-  class { 'exim::config': }->
+  class { 'exim::package':
+    package  => $package,
+    useflags => $useflags,
+    version  => $version,
+  }->
+  class { 'exim::config':
+    add_environment                   => $add_environment,
+    adminserver                       => $adminserver,
+    aliases_target                    => $aliases_target,
+    cfgdir                            => $cfgdir,
+    cfgfile                           => $cfgfile,
+    keep_environment                  => $keep_environment,
+    maildomain                        => $maildomain,
+    primary_hostname                  => $primary_hostname,
+    relay_from_hosts                  => $relay_from_hosts,
+    relay_from_internal_network       => $relay_from_internal_network,
+    rewrite_targets                   => $rewrite_targets,
+    role                              => $role,
+    smarthost_auth                    => $smarthost_auth,
+    smarthost_connection_max_messages => $smarthost_connection_max_messages,
+    smarthost_interface               => $smarthost_interface,
+    smarthost_password                => $smarthost_password,
+    smarthost_port                    => $smarthost_port,
+    smarthost_user                    => $smarthost_user,
+    template_vars                     => $template_vars,
+    tls_advertise_hosts               => $tls_advertise_hosts,
+    tls_certificate                   => $tls_certificate,
+    tls_privatekey                    => $tls_privatekey,
+    trusted_users                     => $real_trusted_users,
+  }->
   class { 'exim::service':
+    service   => $service,
     subscribe => Class['exim::package', 'exim::config'],
   }
   if $enable_nagioscheck {
@@ -72,7 +104,10 @@ class exim (
     }
   }
   class { 'exim::alias':
-    require => Class['exim::service'],
+    aliases        => $aliases,
+    aliases_target => $aliases_target,
+    postmaster     => $postmaster,
+    require        => Class['exim::service'],
   }->
   anchor { 'exim::end': }
 

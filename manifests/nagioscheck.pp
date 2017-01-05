@@ -15,6 +15,7 @@ class exim::nagioscheck (
   $monit_check = 'present',
   $monit_tests = ['if 3 restarts within 18 cycles then timeout'],
   $service = $exim::params::service,
+  $pid = $exim::params::pid,
 ) inherits exim::params {
 
   if defined(Class[nagios::nrpe]) {
@@ -98,7 +99,7 @@ class exim::nagioscheck (
     monit::check_process::process_set { $service:
       ensure => $monit_check,
       tests  => $monit_tests,
-      pid    => $exim::params::pid,
+      pid    => $pid,
     }
   }
 

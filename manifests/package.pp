@@ -2,48 +2,52 @@
 #
 # this class is called via init.pp
 #
-class exim::package () {
+class exim::package (
+  $package,
+  $useflags,
+  $version,
+) {
 
   if $::operatingsystem == 'gentoo' {
 
-    if $exim::useflags {
-      gentoo::useflag { $exim::package:
-        flags   => $exim::useflags,
-        version => $exim::version,
+    if $useflags {
+      gentoo::useflag { $package:
+        flags   => $useflags,
+        version => $version,
       }
     }
 
-    if $exim::version != 'installed' and $exim::version != 'latest' and $exim::version != 'absent' {
+    if $version != 'installed' and $version != 'latest' and $version != 'absent' {
 
       sys11lib::ensure_key_value { 'exim_package_keyword':
         file      => '/etc/portage/package.keywords',
         delimiter => ' ',
-        key       => $exim::package,
+        key       => $package,
         value     => '~amd64',
-        before    => Package[$exim::package],
+        before    => Package[$package],
       }
 
       # mask newer package versions to prevent up- and downgrades in loop
 
       sys11lib::ensure_key_value { 'exim_package_mask':
         file      => '/etc/portage/package.mask',
-        key       => ">${exim::package}",
+        key       => ">${package}",
         delimiter => '-',
-        value     => $exim::version,
-        before    => Package[$exim::package],
+        value     => $version,
+        before    => Package[$package],
       }
     }
   }
 
-  package { $exim::package:
-    ensure => $exim::version,
+  package { $package:
+    ensure => $version,
     alias  => 'exim',
   }
 
   if $::osfamily == 'Debian' {
     package { 'bsd-mailx':
       ensure  => present,
-      require => Package[$exim::package],
+      require => Package[$package],
     }
   }
 }
