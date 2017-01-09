@@ -709,7 +709,11 @@ begin transports
 smarthost_auth:
   driver = smtp
   port = <%= @smarthost_port %>
+<% if @smarthost_interface -%>
   interface = <%= @smarthost_interface %>
+<% else -%>
+  interface =
+<% end -%>
   hosts_try_auth = <%= @adminserver %>
   connection_max_messages = <%= @smarthost_connection_max_messages %>
   #batch_max = 100
@@ -848,7 +852,7 @@ begin authenticators
 plain:
      driver = plaintext
      public_name = PLAIN
-     client_send = "^<%= @smarthost_password %>"
+     client_send = "^<%= @smarthost_user %>^<%= @smarthost_password %>"
 <% end %>
 
 

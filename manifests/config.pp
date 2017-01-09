@@ -48,9 +48,6 @@ class exim::config (
         }
 
       if ($smarthost_auth)  {
-        if (! $smarthost_interface) {
-            fail("smarthost_interface not set to IP/DNS of smarthost_interface: '${smarthost_interface}'")
-        }
         if (! $smarthost_user) {
             fail('smarthost_user not set')
         }
