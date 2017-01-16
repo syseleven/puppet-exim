@@ -57,7 +57,7 @@ exim:
       Sets mailallias address for root, apache, nginx
     $package = $exim::params::package
     $service = $exim::params::service
-    $version = 'latest'
+    $version = 'installed'
     $useflags = ''
       Sets Gentoo useflags for exim package
     $adminserver = ''

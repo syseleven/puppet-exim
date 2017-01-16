@@ -5,7 +5,7 @@ class exim (
   $postmaster,
   $package = $exim::params::package,
   $service = $exim::params::service,
-  $version = 'latest',
+  $version = 'installed',
   $useflags = undef,
   $adminserver = undef,
   $warn_limit = '100',
