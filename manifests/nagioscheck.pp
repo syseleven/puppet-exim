@@ -50,7 +50,7 @@ class exim::nagioscheck (
   if $::operatingsystem != 'Solaris' and $::sys11_gentoo_frozen != 'frozen' {
     if defined(Class['zabbix_agent']) {
       zabbix_agent::template { 'exim': }
-      zabbix_agent::config_snippet::snippet_set { 'exim':
+      zabbix_agent::snippet_set { 'exim':
         content => "UserParameter=get_mailcount,/usr/local/bin/get_mailcount --logfile ${logfile}\nUserParameter=mailqueue,/usr/sbin/exim -bpc",
       }
 
@@ -96,7 +96,7 @@ class exim::nagioscheck (
   }
 
   if defined(Class['monit']) {
-    monit::check_process::process_set { $service:
+    monit::check_process { $service:
       ensure => $monit_check,
       tests  => $monit_tests,
       pid    => $pid,
