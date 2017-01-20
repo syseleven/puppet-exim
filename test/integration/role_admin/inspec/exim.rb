@@ -23,8 +23,12 @@ options = {
   multiple_values: false
 }
 
+
 describe parse_config_file('/etc/aliases', options) do
+  # test default aliases
   its('root') { should eq 'exim@syseleven.de' }
+  # test specific aliases
+  its('testkey') { should eq 'testvalue' }
 end
 
 

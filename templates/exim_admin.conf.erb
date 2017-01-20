@@ -162,9 +162,7 @@ acl_smtp_data = acl_check_data
 # puppet: exim::tls_advertise_hosts
 # tls_advertise_hosts = *
 
-<% if @tls_advertise_hosts -%>
 tls_advertise_hosts = <%= @tls_advertise_hosts %>
-<% end -%>
 
 # Specify the location of the Exim server's TLS certificate and private key.
 # The private key must not be encrypted (password protected). You can put

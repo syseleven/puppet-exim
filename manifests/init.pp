@@ -14,7 +14,7 @@ class exim (
   $primary_hostname = $fqdn,
   $rewrite_targets = [],
   $trusted_users = [],
-  $tls_advertise_hosts = false,
+  $tls_advertise_hosts = '""', # exim wants "" as empty value...
   $tls_certificate = false,
   $tls_privatekey = false,
   $aliases = undef,

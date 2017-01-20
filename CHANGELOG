@@ -1,3 +1,7 @@
+1.15
+  - Set tls_advertise_hosts = "" for empty values #pp-3546
+1.14
+  - Do not use defined type inside class #pp-3546
 1.13
   - Do not force upgrade to latest exim #pp-3540
 1.12

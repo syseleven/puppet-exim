@@ -3,3 +3,5 @@ classes:
 
 exim::postmaster: 'exim@syseleven.de'
 exim::role: 'admin'
+exim::aliases:
+  testkey: 'testvalue'
