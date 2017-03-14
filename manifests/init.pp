@@ -38,6 +38,7 @@ class exim (
   $smarthost_port = 25,
   $add_environment = $exim::params::add_environment,
   $keep_environment = $exim::params::keep_environment,
+  $errors_to = undef,
 ) inherits exim::params {
 
   if defined(Class[apache]) or defined(Class[apache::nagioscheck]) {
@@ -85,6 +86,7 @@ class exim (
     tls_certificate                   => $tls_certificate,
     tls_privatekey                    => $tls_privatekey,
     trusted_users                     => $real_trusted_users,
+    errors_to                         => $errors_to,
   }->
   class { 'exim::service':
     service   => $service,

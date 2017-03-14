@@ -26,6 +26,7 @@ class exim::config (
   $tls_advertise_hosts,
   $tls_certificate,
   $tls_privatekey,
+  $errors_to,
 ) {
   case $role {
     'admin': {

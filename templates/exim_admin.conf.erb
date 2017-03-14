@@ -571,6 +571,9 @@ dnslookup:
   domains = ! +local_domains
   transport = remote_smtp
   ignore_target_hosts = 0.0.0.0 : 127.0.0.0/8
+<%- if @errors_to -%>
+  errors_to = <%= @errors_to %>
+<%- end -%>
   no_more
 
 

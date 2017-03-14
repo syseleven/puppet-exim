@@ -549,6 +549,9 @@ smart_route:
   transport = remote_smtp
   route_list = * <%= @adminserver %>
 <% end -%>
+<%- if @errors_to -%>
+  errors_to = <%= @errors_to -%>
+<% end -%>
 
 # This router routes to remote hosts over SMTP by explicit IP address,
 # when an email address is given in "domain literal" form, for example,

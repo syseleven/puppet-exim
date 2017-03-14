@@ -103,6 +103,8 @@ exim:
     $smarthost_connection_max_messages = 100
     $smarthost_port = 25
       Define connect port of smarthost
+    $errors_to = undef
+      Send bounce messages to this address
 ```
 
 ### Troubleshooting
