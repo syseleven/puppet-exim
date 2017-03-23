@@ -799,7 +799,7 @@ begin retry
 
 begin rewrite
 
-<% @rewrite_targets.sort.uniq.each do |a| -%>
+<% @rewrite_targets.each do |a| -%>
 <%= a %>
 <% end -%>
 
